@@ -3,7 +3,7 @@
 
 <div data-controller="game">
   <h2> Players </h2>
-  <%= render partial: 'games/players', locals: { players: @game.players } %>
+  <%= render partial: 'games/players', locals: { game: @game, players: @game.players } %>
 
   <% if @game.host == @user_id %>
     <button data-action="game#start">Start Game</button>

@@ -3,9 +3,9 @@ class Game < ApplicationRecord
 
   enum :state, waiting: 0, playing: 1, finished: 2
 
-  after_update_commit do
-    ActionCable.server.broadcast 'game_channel', { game: self }
-  end
+  # after_update_commit do
+  #   broadcast_replace_to self, :players, partial: "games/players", locals: { game: self, players: self.players }
+  # end
 
   before_create do
     code = generate_code
@@ -20,9 +20,23 @@ class Game < ApplicationRecord
     self.players ||= []
     self.players << { id: id, name: name, score: 0 } unless self.players.any? { |player| player[:id] == id }
     save
+
+    realtime_replace
+  end
+
+  def remove_player(id)
+    new_players = self.players.reject { |player| player[:id] == id }
+    self.players = new_players
+    save
+
+    realtime_replace
   end
 
   private
+
+  def realtime_replace
+    broadcast_replace target: "players_game_#{self.id}", partial: "games/players", locals: { game: self, players: self.players }
+  end
 
   def generate_code
     (0...4).map { ('A'..'Z').to_a[rand(26)] }.join

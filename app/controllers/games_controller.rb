@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   before_action :user_created?
-  before_action :get_game, only: [:show, :start, :stop]
+  before_action :get_game, only: [:show, :start, :stop, :remove_player]
 
   def new
   end
@@ -20,6 +20,18 @@ class GamesController < ApplicationController
     else
       @game.add_player(@user_id, @user_name)
       @game
+    end
+  end
+
+  def remove_player
+    @game.remove_player(params[:player_id])
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace("players_game_#{@game.id}", partial: "games/players", locals: { game: @game, players: @game.players })
+      end
+
+      format.html { redirect_to game_path(code: @game.code) }
     end
   end
 

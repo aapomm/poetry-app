@@ -11,6 +11,7 @@ export default class extends Controller {
   join() {
     if (this.codeTarget.hidden) {
       this.codeTarget.hidden = false
+      this.codeTarget.focus()
       this.createTarget.hidden = true
     }
     else {
