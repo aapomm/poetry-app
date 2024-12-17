@@ -1,4 +1,10 @@
-<div data-controller="game" id="<% dom_id @game %>" data-game-ready-url-value="<%= ready_game_path(code: @game.code) %>">
+<div
+  data-controller="game" id="<% dom_id @game %>"
+  data-game-code-value="<%= @game.code %>"
+  data-game-host-value="<%= @game.host == @user_id %>"
+  data-game-ready-url-value="<%= ready_game_path(code: @game.code) %>"
+  data-game-start-url-value="<%= start_game_path(code: @game.code) %>"
+>
   <h1> Game Code: <%= @game.code %> </h1>
   <%= turbo_stream_from @game %>
 

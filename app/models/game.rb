@@ -1,11 +1,7 @@
 class Game < ApplicationRecord
   serialize :players
 
-  enum :state, waiting: 0, ready: 1, playing: 2, finished: 3
-
-  # after_update_commit do
-  #   broadcast_replace_to self, :players, partial: "games/players", locals: { game: self, players: self.players }
-  # end
+  enum :state, { waiting: 0, ready: 1, player_turn: 2, player_ready: 3, finished: 4}, default: :waiting
 
   before_create do
     code = generate_code
@@ -47,10 +43,19 @@ class Game < ApplicationRecord
     self.ready!
   end
 
+  def start_game!
+    self.player_turn!
+
+    self.current_player = ''
+    self.current_round = 1
+
+    GamesChannel.broadcast_to(self.current_player)
+  end
+
   private
 
   def realtime_replace
-    broadcast_replace target: "players_game_#{self.id}", partial: "games/players", locals: { game: self, players: self.players }
+    broadcast_replace target: "players_game_#{self.id}", partial: 'games/players', locals: { game: self, players: self.players }
   end
 
   def generate_code

@@ -1,6 +1,7 @@
 class GamesController < ApplicationController
   before_action :user_created?
   before_action :get_game, except: [:new, :create]
+  before_action :ensure_host, only: [:remove_player, :ready, :start, :stop]
 
   def new
   end
@@ -26,21 +27,26 @@ class GamesController < ApplicationController
     @game.remove_player(params[:player_id])
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace("players_game_#{@game.id}", partial: "games/players", locals: { game: @game, players: @game.players })
-      end
-
       format.html { redirect_to game_path(code: @game.code) }
     end
   end
 
   def ready
     @game.prepare!
-    render :ready, layout: !params[:hide_layout]
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace("players_game_#{@game.id}") do
+          render partial: 'games/ready', locals: { game: @game, user_id: @user_id }
+        end
+      end
+
+      format.html { render :ready }
+    end
   end
 
   def start
-    @game.playing!
+    @game.start_game!
     redirect_to @game
   end
 
@@ -50,6 +56,10 @@ class GamesController < ApplicationController
   end
 
   private
+
+  def ensure_host
+    redirect_to root_path unless @game.host == @user_id
+  end
 
   def handle_game_state
     if @game.players.any? { |player| player[:id] == @user_id }
