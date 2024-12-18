@@ -32,7 +32,7 @@ class GamesController < ApplicationController
   end
 
   def ready
-    if @game.players.count < 2
+    if @game.players.count % 2 != 0
       respond_to do |format|
         format.turbo_stream { head :ok }
         format.html { redirect_to game_path(code: @game.code)}
@@ -49,6 +49,7 @@ class GamesController < ApplicationController
 
   def start
     @game.start_game!
+
     redirect_to @game
   end
 

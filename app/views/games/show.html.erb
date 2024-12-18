@@ -5,6 +5,6 @@
   </turbo-frame>
 
   <%= form_with url: ready_game_path(code: @game.code), html: { class: ('hidden' unless game.host == user_id) } do |form| %>
-    <%= form.submit 'Ready!' %>
+    <%= form.submit 'Ready!', data: { action: 'game#ready' } %>
   <% end %>
 <% end %>

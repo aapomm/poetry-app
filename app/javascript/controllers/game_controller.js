@@ -23,11 +23,16 @@ export default class extends Controller {
       then(html => this.element.innerHTML = html)
   }
 
+  ready(e) {
+    if (this.playerTargets.length % 2 != 0) {
+      alert('This game requires an even number of players!')
+      e.preventDefault();
+    }
+  }
+
   // Callbacks
   //
   startButtonTargetConnected(target) {
-    console.log('button connected!')
-
     if (this.hostValue == 'true') {
       target.classList.remove('hidden')
     }
@@ -35,7 +40,10 @@ export default class extends Controller {
 
   playerTargetConnected(target) {
     if (this.hostValue != 'true') {
-      target.querySelector('.remove-link').remove()
+      // Remove link is only present in the lobby
+      if (target.querySelector('.remove-link') != null) {
+        target.querySelector('.remove-link').remove()
+      }
     }
 
     if (this.currentIdValue == target.dataset.playerId) {

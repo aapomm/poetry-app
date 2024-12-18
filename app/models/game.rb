@@ -1,32 +1,13 @@
 class Game < ApplicationRecord
+  include Lobby
+
+  has_many :turns
+
   serialize :players
 
   enum :state, { waiting: 0, ready: 1, player_turn: 2, player_ready: 3, finished: 4}, default: :waiting
 
-  before_create do
-    code = generate_code
-    while Game.exists?(code: code)
-      code = generate_code
-    end
-
-    self.code = code
-  end
-
-  def add_player(id, name)
-    self.players ||= []
-    self.players << { id: id, name: name, score: 0 } unless self.players.any? { |player| player[:id] == id }
-    save
-
-    broadcast_updated_players
-  end
-
-  def remove_player(id)
-    new_players = self.players.reject { |player| player[:id] == id }
-    self.players = new_players
-    save
-
-    broadcast_updated_players
-  end
+  before_create :generate_code
 
   def prepare!
     shuffled_players = self.players.shuffle.in_groups(2)
@@ -46,21 +27,54 @@ class Game < ApplicationRecord
   end
 
   def start_game!
+    create_turn!
+  end
+
+  def create_turn!
+    return if current_round > self.rounds
+
     self.player_turn!
 
-    self.current_player = ''
-    self.current_round = 1
+    last_active_turn = self.current_turn
+    last_active_player_id = last_active_turn&.player_id
 
-    GamesChannel.broadcast_to(self.current_player)
+    if last_active_player_id
+      last_active_turn.end_turn!
+
+      last_active_player_index = self.players.index { |player| player[:id] == last_active_player_id }
+      current_player = self.players[(last_active_player_index + 1) % self.players.count]
+      judge_player = self.players[last_active_player_index]
+    else
+      # For the first round
+      current_player = self.players.first
+      judge_player = self.players.last
+    end
+
+    self.turns.create(
+      player_id: current_player[:id],
+      judge_id: judge_player[:id],
+      round: current_round.floor
+    )
+
+    broadcast_update target: "container_game_#{self.id}", partial: 'games/player_turn', locals: { game: self, player: current_player }
   end
 
   private
 
-  def broadcast_updated_players
-    broadcast_update target: "players_game_#{self.id}", partial: 'games/players', locals: { game: self, players: self.players }
+  def current_round
+    (self.turns.count.to_f / self.players.count.to_f) + 1
+  end
+
+  def current_turn
+    self.turns.active.last
   end
 
   def generate_code
-    (0...4).map { ('A'..'Z').to_a[rand(26)] }.join
+    code = generate_code
+    while Game.exists?(code: code)
+      code = (0...4).map { ('A'..'Z').to_a[rand(26)] }.join
+    end
+
+    self.code = code
   end
 end
