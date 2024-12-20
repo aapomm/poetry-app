@@ -11,6 +11,7 @@ module Scoring
         sub_turn.save
 
         broadcast_word(sub_turn, word, :easy, true)
+
       elsif sub_turn.hard_word == word
         sub_turn.score += 3 if sub_turn.score == 0 || sub_turn.score == 1
         sub_turn.save
@@ -27,6 +28,7 @@ module Scoring
         sub_turn.save
 
         broadcast_word(sub_turn, word, :easy, false)
+
       elsif sub_turn.hard_word == word
         sub_turn.score -= 3 if sub_turn.score == 3 || sub_turn.score == 4
         sub_turn.save

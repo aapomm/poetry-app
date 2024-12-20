@@ -31,7 +31,9 @@ class Game < ApplicationRecord
   end
 
   def create_turn!
-    return if current_round > self.rounds
+    if current_round > self.rounds
+      logger.info "Game #{self.id} has ended"
+    end
 
     self.player_turn!
 

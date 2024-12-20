@@ -43,8 +43,23 @@
   border-color: #ccc;
   cursor: not-allowed;
   opacity: 0.5;
-  pointer-events: none; /* Prevent any interaction */
+  pointer-events: none;
 }
+
+.card.unclickable:not(.scored) {
+  background: none;
+  border: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.card.unclickable.scored {
+  color: #000;
+  border: none;
+  cursore: non-allowed;
+  pointer-events: none;
+}
+
 
 .card .difficulty {
   color: #999;
@@ -55,11 +70,26 @@
   font-weight: bold;
 }
 
-.turn-actions {
+.skip-container {
   margin-top: 7rem;
 }
 
-.turn-actions button {
+.skip-button {
+  color: #fff;
   background-color: #ff8585;
   border-radius: 10px;
+}
+
+.pass-button {
+  color: #000;
+  background-color: #3cec65;
+  border-radius: 10px;
+}
+
+.skip-button.disabled {
+  background-color: #f0f0f0;
+  color: #aaa;
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none; /* Prevent any interaction */
 }

@@ -7,3 +7,7 @@
     <%= render partial: 'turns/word', locals: { word: sub_turn.hard_word, difficulty: :hard, scored: false } %>
   </turbo-frame>
 </div>
+
+<div data-turn-target="skip" id="<%= dom_id(sub_turn, :skip) %>" class="skip-container">
+  <%= render partial: 'turns/skip', locals: { sub_turn: sub_turn } %>
+</div

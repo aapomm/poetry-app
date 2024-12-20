@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [
-    "timer", "words", "easyWord", "hardWord", "actions", "currentView", "otherView"
+    "timer", "words", "word", "skip", "currentView", "otherView", "playerHeader", "judgeHeader"
   ]
 
   static values = {
@@ -25,23 +25,46 @@ export default class extends Controller {
     this._renderView()
   }
 
-  score({ params }) {
+  wordTargetConnected(target) {
+    if (this._isPlayer()) {
+      this._renderSkip()
+      this._setWordsUnclickable()
+    }
+  }
+
+  score(e) {
+    if (e.target.classList.contains('disabled') || this._isPlayer()) {
+      return
+    }
+
+    this._disableButtons()
+
     fetch(this.scoreUrlValue, {
       method: 'POST',
       headers: this._getFetchHeaders(),
-      body: JSON.stringify({ word: params['word'] })
-    })
+      body: JSON.stringify({ word: e.params['word'] })
+    }).then(() => this._enableButtons())
   }
 
-  unscore({ params }) {
+  unscore(e) {
+    if (e.target.classList.contains('disabled') || this._isPlayer()) {
+      return
+    }
+
+    this._disableButtons()
+
     fetch(this.unscoreUrlValue, {
       method: 'POST',
       headers: this._getFetchHeaders(),
-      body: JSON.stringify({ word: params['word'] })
-    })
+      body: JSON.stringify({ word: e.params['word'] })
+    }).then(() => this._enableButtons())
   }
 
   skip() {
+    if (e.target.classList.contains('disabled')) { return }
+
+    this._disableButtons()
+
     fetch(this.skipUrlValue, {
       method: 'POST',
       headers: this._getFetchHeaders(),
@@ -75,17 +98,66 @@ export default class extends Controller {
   }
 
   _renderView() {
-    if (this._isPlayer() || this._isJudge()) {
+    if (this._isPlayer()) {
       this.currentViewTarget.classList.remove('hidden')
+      this.playerHeaderTarget.classList.remove('hidden')
+
+      this._setWordsUnclickable()
+
+      this.skipTarget.querySelector('[data-skip-type="skip"]').classList.remove('hidden')
+    }
+    else if (this._isJudge()) {
+      this.currentViewTarget.classList.remove('hidden')
+      this.judgeHeaderTarget.classList.remove('hidden')
+
+      this.skipTarget.querySelector('[data-skip-type="bonk"]').classList.remove('hidden')
     }
     else {
       this.otherViewTarget.classList.remove('hidden')
     }
   }
 
+  _disableButtons() {
+    this.wordTargets.forEach((word) => {
+      word.classList.add('disabled')
+    })
+
+    this.skipTarget.querySelectorAll('button').forEach((skip) => {
+      skip.classList.add('disabled')
+    })
+  }
+
+  _enableButtons() {
+    this.wordTargets.forEach((word) => {
+      word.classList.remove('disabled')
+    })
+
+    this.skipTarget.querySelectorAll('button').forEach((skip) => {
+      skip.classList.remove('disabled')
+    })
+  }
+
+  _setWordsUnclickable() {
+    this.wordTargets.forEach((word) => { word.classList.add('unclickable') })
+  }
+
+  _renderSkip() {
+    const scoredCount = document.querySelectorAll('.scored[data-turn-target="word"]').length
+
+    if (scoredCount == 0) {
+      this.skipTarget.querySelector('[data-skip-type="pass"]').classList.add('hidden')
+      this.skipTarget.querySelector('[data-skip-type="skip"]').classList.remove('hidden')
+    }
+    else {
+      this.skipTarget.querySelector('[data-skip-type="pass"]').classList.remove('hidden')
+      this.skipTarget.querySelector('[data-skip-type="skip"]').classList.add('hidden')
+    }
+  }
+
   _getFetchHeaders() {
     return {
-      Accept: "text/vnd.turbo-stream.html",
+      //Accept: "text/vnd.turbo-stream.html",
+      Accept: 'application/json',
       'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       'Content-Type': 'application/json'
     }
