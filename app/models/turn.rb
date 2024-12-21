@@ -39,7 +39,7 @@ class Turn < ApplicationRecord
     else
       self.create_sub_turn
 
-      broadcast_sub_turn(previous_sub_turn)
+      broadcast_sub_turn(previous_sub_turn, type == 'bonk')
     end
   end
 
@@ -83,10 +83,10 @@ class Turn < ApplicationRecord
 
   private
 
-  def broadcast_sub_turn(previous_sub_turn)
+  def broadcast_sub_turn(previous_sub_turn, bonk)
     broadcast_replace_to self.game,
       target: "sub_turn_#{previous_sub_turn.id}",
-      partial: 'turns/sub_turn', locals: { sub_turn: self.current_sub_turn }
+      partial: 'turns/sub_turn', locals: { sub_turn: self.current_sub_turn, bonk: bonk }
   end
 
   def broadcast_empty_sub_turn(previous_sub_turn)

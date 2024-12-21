@@ -41,6 +41,10 @@ form.no-margin {
   display: none !important;
 }
 
+.invisible {
+  opacity: 0 !important;
+}
+
 .current-player {
   font-weight: bold;
 }

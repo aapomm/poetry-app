@@ -95,3 +95,25 @@
   opacity: 0.5;
   pointer-events: none; /* Prevent any interaction */
 }
+
+.bonk {
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  left: 0;
+
+  height: 100%;
+  width: 100%;
+
+  background-color: red;
+
+  color: white;
+  font-size: 10rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: opacity 0.3s ease;
+}

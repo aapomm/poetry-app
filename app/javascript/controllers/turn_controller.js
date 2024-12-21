@@ -2,7 +2,9 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [
-    "timer", "words", "word", "skip", "currentView", "otherView", "playerHeader", "judgeHeader"
+    "timer", "words", "word", "skip", "currentView", "otherView",
+    "playerHeader", "judgeHeader",
+    "bonk"
   ]
 
   static values = {
@@ -94,6 +96,18 @@ export default class extends Controller {
     this._renderSkip()
   }
 
+  bonkTargetConnected(target) {
+    if (this._isPlayer()) {
+      this.bonkTarget.classList.remove('invisible')
+
+      setTimeout(() => this.bonkTarget.classList.add('invisible'), 100)
+      setTimeout(() => this.bonkTarget.remove(), 300)
+    }
+    else {
+      target.remove()
+    }
+  }
+
   // Private
   //
   _currentId() {
@@ -110,7 +124,7 @@ export default class extends Controller {
 
   _countdown() {
     if (this.timerValue == 0) {
-      this.endTurn()
+      // this.endTurn()
     }
     else {
       this.timerValue -= 1

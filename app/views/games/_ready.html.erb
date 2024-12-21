@@ -2,14 +2,19 @@
 <p> Here are the teams: </p>
 <table class="player-list u-full-width">
   <tbody>
-    <% game.players.each do |player| %>
+    <% game.players.each_with_index do |player, index| %>
       <tr data-game-target="player" data-player-id="<%= player[:id] %>">
-        <td class="player-team-<%= player[:team] %>"> <%= "#{player[:name]} (Team #{player[:team].capitalize})" %></td>
+        <td class="player-team-<%= player[:team] %>">
+          <%= "#{player[:name]} (Team #{player[:team].capitalize})" %>
+
+          <%= '<--- First player' if index == 0 %>
+          <%= '<--- Judge' if index == game.players.count - 1 %>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-<p> Please sit in a circle in this order! We'll start with player: <strong><%= game.players.first[:name] %></strong></p>
+<p> Please sit in a circle in this order! We'll start with player: <strong><%= game.players.first[:name] %></strong> and judge: <strong><%= game.players.last[:name] %></strong></p>
 
 <div data-game-target="startButton" class="<%= 'hidden' if !(defined?(user_id) && game.host == user_id) %>" >
   <p> If everyone is ready, start the game with this button:</p>

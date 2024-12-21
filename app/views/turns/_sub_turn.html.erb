@@ -12,4 +12,8 @@
   <div data-turn-target="skip" class="skip-container">
     <%= render partial: 'turns/skip', locals: { sub_turn: sub_turn } %>
   </div>
+
+  <% if bonk %>
+    <div data-turn-target="bonk" class="bonk invisible">BONK!</div>
+  <% end %>
 </turbo-frame>
