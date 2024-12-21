@@ -9,9 +9,28 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
-.container {
+.main-container {
+  display: flex;
   text-align: center;
-  width: 30%;
+  margin-top: 10rem;
+  justify-content: center;
+}
+
+form.no-margin {
+  margin: auto;
+}
+
+.join-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.join-container div {
+  flex: 1 1 0px;
+}
+
+.join-container .button {
+  width: 20rem;
 }
 
 .player-list td {
@@ -19,7 +38,7 @@
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .current-player {

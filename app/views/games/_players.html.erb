@@ -8,10 +8,7 @@
     <tbody>
       <% players.each do |player| %>
         <tr data-game-target="player" data-player-id="<%= player[:id] %>">
-          <td> <%= "#{player[:name]} (#{player[:id]})" %> </td>
-          <td class="remove-link">
-            <%= link_to 'Remove', remove_player_game_path(code: game.code, player_id: player[:id]), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
-          </td>
+          <td> <%= "#{player[:name]}" %> <%= link_to 'X', remove_player_game_path(code: game.code, player_id: player[:id]), class: 'remove-link', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %></td>
         </tr>
       <% end %>
     </tbody>
