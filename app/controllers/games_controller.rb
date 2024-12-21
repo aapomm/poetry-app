@@ -1,8 +1,8 @@
 class GamesController < ApplicationController
   include UserCreated
 
-  before_action :get_game, except: [:new, :create]
-  before_action :ensure_host, only: [:remove_player, :ready, :start]
+  before_action :get_game, except: [ :new, :create ]
+  before_action :ensure_host, only: [ :remove_player, :ready, :start ]
 
   def index
     redirect_to new_game_path
@@ -14,7 +14,7 @@ class GamesController < ApplicationController
   def create
     @game = Game.create(host: session[:user_id])
     @game.players = []
-    @game.players << { id: session[:user_id], name: session[:user_name], score: 0}
+    @game.players << { id: session[:user_id], name: session[:user_name], score: 0 }
     @game.save
 
     redirect_to game_path(code: @game.code)
@@ -40,7 +40,7 @@ class GamesController < ApplicationController
     if @game.players.count % 2 != 0
       respond_to do |format|
         format.turbo_stream { head :ok }
-        format.html { redirect_to game_path(code: @game.code)}
+        format.html { redirect_to game_path(code: @game.code) }
       end
     else
       @game.prepare!
@@ -57,7 +57,7 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream { head :ok }
-      format.html { redirect_to game_path(code: @game.code)}
+      format.html { redirect_to game_path(code: @game.code) }
     end
   end
 
@@ -69,7 +69,7 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream { head :ok }
-      format.html { redirect_to game_path(code: @game.code)}
+      format.html { redirect_to game_path(code: @game.code) }
     end
   end
 
