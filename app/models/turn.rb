@@ -96,10 +96,10 @@ class Turn < ApplicationRecord
   end
 
   def set_words
-    previous_words = Word.joins(:turns).where(turns: { game_id: self.game_id })
+    previous_words = SubTurn.joins(:turn).where(turns: { game_id: self.game_id }).pluck(:easy_word, :hard_word).flatten
 
-    easy_words = (Word.all.easy - previous_words).sample(20)
-    hard_words = (Word.all.hard - previous_words).sample(20)
+    easy_words = Word.all.where.not(word: previous_words).easy.sample(20)
+    hard_words = Word.all.where.not(word: previous_words).hard.sample(20)
 
     self.words = easy_words + hard_words
   end

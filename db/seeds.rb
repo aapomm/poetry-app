@@ -9,10 +9,12 @@
 #   end
 #
 #
-words = YAML.load_file(Rails.root.join('db', 'words.yml'))
+easy_words = YAML.load_file(Rails.root.join('db', 'easy_words.yml'))
+easy_words['easy'].each do |word|
+  Word.find_or_create_by!(word: word.downcase, difficulty: :easy)
+end
 
-%w{easy hard}.each do |difficulty|
-  words[difficulty].each do |word|
-    Word.find_or_create_by!(word: word.downcase, difficulty: difficulty)
-  end
+hard_words = YAML.load_file(Rails.root.join('db', 'hard_words.yml'))
+hard_words['hard'].each do |word|
+  Word.find_or_create_by!(word: word.downcase, difficulty: :hard)
 end

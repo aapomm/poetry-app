@@ -124,7 +124,7 @@ export default class extends Controller {
 
   _countdown() {
     if (this.timerValue == 0) {
-      // this.endTurn()
+      this.endTurn()
     }
     else {
       this.timerValue -= 1
