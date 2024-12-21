@@ -2,12 +2,12 @@
 service: poetry_app
 
 # Name of the container image.
-image: your-user/poetry_app
+image: aapomm/poetry_app
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - 143.198.216.121
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -25,7 +25,7 @@ proxy:
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: your-user
+  username: aapomm
 
   # Always use an access token rather than real password when possible.
   password:
@@ -38,7 +38,7 @@ env:
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
-    SOLID_QUEUE_IN_PUMA: true
+    # SOLID_QUEUE_IN_PUMA: true
 
     # Set number of processes dedicated to Solid Queue (default: 1)
     # JOB_CONCURRENCY: 3
