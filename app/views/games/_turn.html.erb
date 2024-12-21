@@ -3,7 +3,7 @@
   data-turn-player-id-value="<%= turn.player_id %>"
   data-turn-judge-id-value="<%= turn.judge_id %>"
 
-  data-turn-timer-value="<%= 10 %>"
+  data-turn-timer-value="<%= turn.seconds_left %>"
 
   data-turn-score-url-value="<%= score_game_turn_path(game.code, turn) %>"
   data-turn-unscore-url-value="<%= unscore_game_turn_path(game.code, turn) %>"

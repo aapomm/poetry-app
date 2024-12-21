@@ -77,6 +77,10 @@ class Turn < ApplicationRecord
     @current_judge ||= self.game.players.find { |player| player[:id] == self.judge_id }
   end
 
+  def expired?
+    self.active? && self.seconds_left < 0
+  end
+
   private
 
   def broadcast_sub_turn(previous_sub_turn)
@@ -94,8 +98,8 @@ class Turn < ApplicationRecord
   def set_words
     previous_words = Word.joins(:turns).where(turns: { game_id: self.game_id })
 
-    easy_words = (Word.all.easy - previous_words).sample(10)
-    hard_words = (Word.all.hard - previous_words).sample(10)
+    easy_words = (Word.all.easy - previous_words).sample(20)
+    hard_words = (Word.all.hard - previous_words).sample(20)
 
     self.words = easy_words + hard_words
   end

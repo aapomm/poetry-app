@@ -90,7 +90,11 @@ class GamesController < ApplicationController
       when :ready
         render :ready
       when :player_turn
-        render :turn
+        if @game.current_turn.expired?
+          redirect_to end_turn_game_path(code: @game.code)
+        else
+          render :turn
+        end
       when :player_ready
         render :player_ready
       when :finished
