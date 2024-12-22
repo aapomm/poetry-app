@@ -49,6 +49,14 @@ form.no-margin {
   font-weight: bold;
 }
 
+table tr.player-team-mad {
+  background-color: #e1792d;
+}
+
+table tr.player-team-glad {
+  background-color: #ffbc9a;
+}
+
 table.turn-score td {
   text-align: center;
 }

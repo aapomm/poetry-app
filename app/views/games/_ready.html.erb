@@ -3,8 +3,8 @@
 <table class="player-list u-full-width">
   <tbody>
     <% game.players.each_with_index do |player, index| %>
-      <tr data-game-target="player" data-player-id="<%= player[:id] %>">
-        <td class="player-team-<%= player[:team] %>">
+      <tr data-game-target="player" data-player-id="<%= player[:id] %>" class="player-team-<%= player[:team] %>" >
+        <td>
           <%= "#{player[:name]} (Team #{player[:team].capitalize})" %>
 
           <%= '<--- First player' if index == 0 %>

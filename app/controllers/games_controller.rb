@@ -41,7 +41,7 @@ class GamesController < ApplicationController
   end
 
   def ready
-    if @game.players.count % 2 != 0
+    if invalid_player_count
       respond_to do |format|
         format.turbo_stream { head :ok }
         format.html { redirect_to game_path(code: @game.code) }
@@ -122,5 +122,11 @@ class GamesController < ApplicationController
 
   def get_game
     @game = Game.find_by_code(params[:code])
+  end
+
+  def invalid_player_count
+    @game.players.count % 2 != 0 ||
+      @game.players.count < 2 ||
+      @game.players.count > 8
   end
 end

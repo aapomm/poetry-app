@@ -86,7 +86,7 @@ export default class extends Controller {
       this._renderPass()
 
       if (this._scoredCount() == 2) {
-        setTimeout(() => this.skip({ params: { }, target: target }), 300)
+        setTimeout(() => this.skip({ params: { }, target: target }), 200)
       }
     }
     else if (this._isJudge()) {
