@@ -1,4 +1,4 @@
-<%= render layout: 'layouts/container' do |game, _| %>
+<%= render layout: 'layouts/container' do |game| %>
   <% turn = game.current_turn %>
   <%= render partial: 'games/turn', locals: { game: game, turn: turn } %>
 <% end %>

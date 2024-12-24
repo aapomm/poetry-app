@@ -1,25 +1,59 @@
-<h2> Game is starting! </h2>
-<p> Here are the teams: </p>
-<table class="player-list u-full-width">
-  <tbody>
-    <% game.players.each_with_index do |player, index| %>
-      <tr data-game-target="player" data-player-id="<%= player[:id] %>" class="player-team-<%= player[:team] %>" >
-        <td>
-          <%= "#{player[:name]} (Team #{player[:team].capitalize})" %>
+<% if game.turns.any? %>
+  <% last_turn = game.turns.last %>
+  <% last_player = game.last_player %>
 
-          <%= '<--- First player' if index == 0 %>
-          <%= '<--- Judge' if index == game.players.count - 1 %>
-        </td>
-      </tr>
+  <h1> Time's up! </h1>
+
+  <p> <%= last_player[:name] %> scored the following words: </p>
+  <table class="turn-score u-full-width">
+    <tbody>
+      <% last_turn.sub_turns.each do |sub_turn| %>
+        <tr class="<%= sub_turn.score < 0 ? 'negative' : '' %>" >
+          <td <%= 'class=scored' if sub_turn.score == 1 || sub_turn.score == 4 %>> <%= sub_turn.easy_word %> </td>
+          <td <%= 'class=scored' if sub_turn.score == 3 || sub_turn.score == 4 %>> <%= sub_turn.hard_word %> </td>
+          <td> <%= sub_turn.score %> </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <p> <%= last_player[:name] %> scored a total of <strong><%= last_turn.total_score %></strong> points! Team <%= last_player[:team].to_s.capitalize %> now has a total score of <strong><%= last_player[:team] == :mad ? game.mad_score : game.glad_score %></strong> points! </p>
+
+  <p> The next player is: <strong><%= game.next_players[0][:name] %></strong>.
+  <p> The judge is: <strong><%= game.next_players[1][:name] %></strong>.
+
+  <div data-game-target="startButton" class="hidden">
+    <p> When the participants ready, click the button below to pass the game to them: </p>
+
+    <%= form_with url: start_game_path(code: game.code) do |form| %>
+      <%= form.submit 'Continue!' %>
     <% end %>
-  </tbody>
-</table>
-<p> Please sit in a circle in this order! We'll start with player: <strong><%= game.players.first[:name] %></strong> and judge: <strong><%= game.players.last[:name] %></strong></p>
+  </div>
 
-<div data-game-target="startButton" class="<%= 'hidden' if !(defined?(user_id) && game.host == user_id) %>" >
-  <p> If everyone is ready, start the game with this button:</p>
+<% else %>
+  <h2> Game is starting! </h2>
+  <p> Here are the teams: </p>
+  <table class="player-list u-full-width">
+    <tbody>
+      <% game.players.each_with_index do |player, index| %>
+        <tr data-game-target="player" data-player-id="<%= player[:id] %>" class="player-team-<%= player[:team] %>" >
+          <td>
+            <%= "#{player[:name]} (Team #{player[:team].capitalize})" %>
 
-  <%= form_with url: start_game_path(code: game.code) do |form| %>
-    <%= form.submit 'Start Game!' %>
-  <% end %>
-</div>
+            <%= '<--- First player' if index == 0 %>
+            <%= '<--- Judge' if index == game.players.count - 1 %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p> Please sit in a circle in this order! We'll start with player: <strong><%= game.players.first[:name] %></strong> and judge: <strong><%= game.players.last[:name] %></strong></p>
+
+  <div data-game-target="startButton" class="hidden">
+    <p> If everyone is ready, start the game with this button:</p>
+
+    <%= form_with url: start_game_path(code: game.code) do |form| %>
+      <%= form.submit 'Start Game!' %>
+    <% end %>
+  </div>
+<% end %>

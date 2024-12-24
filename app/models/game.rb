@@ -5,7 +5,7 @@ class Game < ApplicationRecord
 
   serialize :players
 
-  enum :state, { waiting: 0, ready: 1, player_turn: 2, player_ready: 3, finished: 4}, default: :waiting
+  enum :state, { waiting: 0, ready: 1, player_turn: 2, finished: 3 }, default: :waiting
 
   before_validation :generate_code, if: -> { self.code.nil? }
 
@@ -59,8 +59,8 @@ class Game < ApplicationRecord
       self.finished!
       broadcast_update target: "container_game_#{self.id}", partial: 'games/end', locals: { game: self }
     else
-      self.player_ready!
-      broadcast_update target: "container_game_#{self.id}", partial: 'games/player_ready', locals: { game: self }
+      self.ready!
+      broadcast_update target: "container_game_#{self.id}", partial: 'games/ready', locals: { game: self }
     end
   end
 

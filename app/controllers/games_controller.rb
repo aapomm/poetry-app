@@ -102,8 +102,6 @@ class GamesController < ApplicationController
         else
           render :turn
         end
-      when :player_ready
-        render :player_ready
       when :finished
         render :end
       else
