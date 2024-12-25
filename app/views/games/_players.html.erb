@@ -4,13 +4,11 @@
 <% if !players || players.empty? %>
   <p>There are no players in this game yet.</p>
 <% else %>
-  <table class="player-list u-full-width">
-    <tbody>
-      <% players.each do |player| %>
-        <tr data-game-target="player" data-player-id="<%= player[:id] %>">
-          <td> <%= "#{player[:name]}" %> <%= link_to 'X', remove_player_game_path(code: game.code, player_id: player[:id]), class: 'remove-link', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <ol>
+    <% players.each do |player| %>
+      <li data-game-target="player" data-player-id="<%= player[:id] %>">
+        <%= "#{player[:name]}" %> <%= link_to 'X', remove_player_game_path(code: game.code, player_id: player[:id]), class: 'remove-link', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
+      </li>
+    <% end %>
+  </ol>
 <% end %>

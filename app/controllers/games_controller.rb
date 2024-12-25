@@ -66,15 +66,25 @@ class GamesController < ApplicationController
   end
 
   def end_turn
+    current_turn = @game.current_turn
+
     # Ensure judge
-    head :ok unless @game.current_turn.judge_id == @user_id
+    if current_turn.judge_id == @user_id
+      # Only end the turn if the turn has expired or
+      # the turn has ran out of words
+      if current_turn.expired? || (!current_turn.expired? && current_turn.words.count < 2)
+        @game.end_turn!
 
-    @game.end_turn!
-
-    respond_to do |format|
-      format.turbo_stream { head :ok }
-      format.json { { status: 200 } }
-      format.html { redirect_to game_path(code: @game.code) }
+        respond_to do |format|
+          format.turbo_stream { head :ok }
+          format.json { { status: 200 } }
+          format.html { redirect_to game_path(code: @game.code) }
+        end
+      else
+        head :ok
+      end
+    else
+      head :ok
     end
   end
 
@@ -95,7 +105,7 @@ class GamesController < ApplicationController
       when :ready
         render :ready
       when :player_turn
-        if @game.current_turn.expired?
+        if @game.current_turn.expired? || @game.current_turn.words.count < 2
           @game.end_turn!
 
           redirect_to game_path(code: @game.code)

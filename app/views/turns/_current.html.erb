@@ -12,4 +12,8 @@
   <h1>999<h1>
 </div>
 
-<%= render partial: 'turns/sub_turn', locals: { sub_turn: turn.current_sub_turn, bonk: false } %>
+<% if turn.current_sub_turn %>
+  <%= render partial: 'turns/sub_turn', locals: { sub_turn: turn.current_sub_turn, bonk: false } %>
+<% else %>
+  <%= render partial: 'turns/empty_sub_turn' %>
+<% end %>

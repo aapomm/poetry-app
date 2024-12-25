@@ -2,9 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [
-    "timer", "words", "word", "skip", "currentView", "otherView",
+    "timer", "words", "word", "skip",
+    "currentView", "otherView",
     "playerHeader", "judgeHeader",
-    "bonk"
+    "bonk", "empty"
   ]
 
   static values = {
@@ -102,12 +103,21 @@ export default class extends Controller {
     if (this._isPlayer()) {
       this.bonkTarget.classList.remove('invisible')
 
-      setTimeout(() => this.bonkTarget.classList.add('invisible'), 100)
-      setTimeout(() => this.bonkTarget.remove(), 300)
+      setTimeout(() => {
+        if (this.hasBonkTarget) { this.bonkTarget.classList.add('invisible') }
+      }, 100)
+
+      setTimeout(() => {
+        if (this.hasBonkTarget) { this.bonkTarget.remove() }
+      }, 300)
     }
     else {
       target.remove()
     }
+  }
+
+  emptyTargetConnected(target) {
+    if (this.timerValue > 5) { this.timerValue = 5 }
   }
 
   // Private
@@ -155,6 +165,30 @@ export default class extends Controller {
     this._renderSkip()
   }
 
+  _renderSkip() {
+    if (this.hasEmptyTarget) { return }
+
+    if (this._isPlayer()) {
+      this.skipTarget.querySelector('[data-skip-type="skip"]').classList.remove('hidden')
+
+      this._renderPass()
+    }
+    else if (this._isJudge()) {
+      this.skipTarget.querySelector('[data-skip-type="bonk"]').classList.remove('hidden')
+    }
+  }
+
+  _renderPass() {
+    if (this._scoredCount() == 0) {
+      this.skipTarget.querySelector('[data-skip-type="pass"]').classList.add('hidden')
+      this.skipTarget.querySelector('[data-skip-type="skip"]').classList.remove('hidden')
+    }
+    else {
+      this.skipTarget.querySelector('[data-skip-type="pass"]').classList.remove('hidden')
+      this.skipTarget.querySelector('[data-skip-type="skip"]').classList.add('hidden')
+    }
+  }
+
   _disableButtons() {
     this.wordTargets.forEach((word) => {
       word.classList.add('disabled')
@@ -177,28 +211,6 @@ export default class extends Controller {
 
   _setWordsUnclickable() {
     this.wordTargets.forEach((word) => { word.classList.add('unclickable') })
-  }
-
-  _renderSkip() {
-    if (this._isPlayer()) {
-      this.skipTarget.querySelector('[data-skip-type="skip"]').classList.remove('hidden')
-
-      this._renderPass()
-    }
-    else if (this._isJudge()) {
-      this.skipTarget.querySelector('[data-skip-type="bonk"]').classList.remove('hidden')
-    }
-  }
-
-  _renderPass() {
-    if (this._scoredCount() == 0) {
-      this.skipTarget.querySelector('[data-skip-type="pass"]').classList.add('hidden')
-      this.skipTarget.querySelector('[data-skip-type="skip"]').classList.remove('hidden')
-    }
-    else {
-      this.skipTarget.querySelector('[data-skip-type="pass"]').classList.remove('hidden')
-      this.skipTarget.querySelector('[data-skip-type="skip"]').classList.add('hidden')
-    }
   }
 
   _scoredCount() {
