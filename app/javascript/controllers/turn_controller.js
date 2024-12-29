@@ -68,7 +68,7 @@ export default class extends Controller {
       method: 'POST',
       headers: this._getFetchHeaders(),
       body: JSON.stringify({ type: e.params['skip'] })
-    })
+    }).then(() => this._enableButtons())
   }
 
   endTurn() {

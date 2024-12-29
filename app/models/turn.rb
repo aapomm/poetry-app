@@ -31,6 +31,8 @@ class Turn < ApplicationRecord
   end
 
   def next_sub_turn(type)
+    return if self.expired?
+
     update_total_score(type)
 
     previous_sub_turn = self.current_sub_turn
