@@ -144,11 +144,16 @@ export default class extends Controller {
       }
     }
     else {
-      this.timerValue -= 1
+      let interval = 1000
 
-      this.timerTarget.innerHTML = "<h1>" + Number(this.timerValue) + "</h1>"
+      const remainder = this.timerValue % 1000
+      if (remainder != 0) { interval = remainder }
 
-      setTimeout(() => this._countdown(), 1000)
+      this.timerValue -= interval
+
+      setTimeout(() => this._countdown(), interval)
+
+      this.timerTarget.innerHTML = "<h1>" + Math.floor( Number(this.timerValue) / 1000 ) + "</h1>"
     }
   }
 

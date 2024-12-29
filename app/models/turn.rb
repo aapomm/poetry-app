@@ -56,8 +56,8 @@ class Turn < ApplicationRecord
     self.save
   end
 
-  def seconds_left
-    self.game.time_per_turn - (Time.now - self.created_at).to_i
+  def milliseconds_left
+    self.game.time_per_turn - ( (Time.now - self.created_at).to_f * 1000 ).floor
   end
 
   def create_sub_turn
@@ -83,7 +83,8 @@ class Turn < ApplicationRecord
   end
 
   def expired?
-    self.active? && self.seconds_left < 5
+    # Within half a second
+    self.active? && self.milliseconds_left < 500
   end
 
   private
