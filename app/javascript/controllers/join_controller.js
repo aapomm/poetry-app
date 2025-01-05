@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "create", "code", "cancel", "help" ]
+  static targets = [ "create", "code", "cancel", "help", "logout" ]
 
   join(e) {
     if (this.codeTarget.classList.contains('hidden')) {
@@ -12,6 +12,7 @@ export default class extends Controller {
 
       this.createTarget.classList.add('hidden')
       this.helpTarget.classList.add('hidden')
+      this.logoutTarget.classList.add('hidden')
     }
     else {
       window.location.href = `/games/${this.codeTarget.value}`
@@ -24,6 +25,7 @@ export default class extends Controller {
 
     this.createTarget.classList.remove('hidden')
     this.helpTarget.classList.remove('hidden')
+    this.logoutTarget.classList.remove('hidden')
   }
 
   upcase() {

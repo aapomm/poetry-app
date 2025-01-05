@@ -10,26 +10,6 @@ class Turn < ApplicationRecord
   before_create :set_words
   after_create :create_sub_turn
 
-  def update_total_score(type)
-    if type == 'bonk'
-      self.total_score -= 1
-      self.current_sub_turn.update(score: -1, skip_type: :bonk)
-    elsif type == 'end_turn'
-      self.total_score += self.current_sub_turn.score
-    else
-      # Skip (-1)
-      if self.current_sub_turn.score == 0
-        self.total_score -= 1
-        self.current_sub_turn.update(score: -1, skip_type: :skip)
-      # Pass
-      else
-        self.total_score += self.current_sub_turn.score
-      end
-    end
-
-    self.save
-  end
-
   def next_sub_turn(type)
     return if self.expired?
 

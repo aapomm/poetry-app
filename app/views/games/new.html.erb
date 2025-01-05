@@ -21,7 +21,7 @@
     </div>
 
     <div>
-      <%= link_to 'Logout', users_path, class: 'button logout', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
+      <%= link_to 'Logout', users_path, class: 'button logout', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?', 'join-target': 'logout' } %>
     </div>
   </div>
 </div>
