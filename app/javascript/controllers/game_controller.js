@@ -26,6 +26,10 @@ export default class extends Controller {
     }
   }
 
+  reconnect() {
+    window.location.reload();
+  }
+
   // Callbacks
   //
   startButtonTargetConnected(target) {

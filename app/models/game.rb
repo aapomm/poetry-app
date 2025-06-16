@@ -9,7 +9,7 @@ class Game < ApplicationRecord
 
   before_validation :generate_code, if: -> { self.code.nil? }
 
-  validates :code, presence: true, uniqueness: true 
+  validates :code, presence: true, uniqueness: true
 
   def prepare!
     self.shuffle_players!

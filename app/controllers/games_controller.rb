@@ -118,8 +118,7 @@ class GamesController < ApplicationController
       if @game.state.to_sym == :waiting
         @game.add_player(@user_id, @user_name)
       else
-        puts 'Game has already started!'
-        redirect_to new_game_path
+        handle_reconnect
       end
     end
   end
@@ -132,5 +131,18 @@ class GamesController < ApplicationController
     @game.players.count % 2 != 0 ||
       @game.players.count < 2 ||
       @game.players.count > 12
+  end
+
+  # NOTE: This allows the possibility of multiple browsers on one user!
+  def handle_reconnect
+    user = @game.players.find { |player| player[:name] == @user_name }
+
+    if user
+      session[:user_id] = user[:id]
+      @user_id = user[:id]
+    else
+      puts 'Game has already started!'
+      redirect_to new_game_path
+    end
   end
 end

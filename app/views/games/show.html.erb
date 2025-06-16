@@ -4,6 +4,8 @@
     <%= render partial: 'games/players', locals: { game: @game, players: @game.players } %>
   </turbo-frame>
 
+  <button class="reconnect-button" data-action='game#reconnect'>Reconnect</button>
+
   <%= form_with url: ready_game_path(code: @game.code), html: { class: ('hidden' unless @game.host == @user_id) } do |form| %>
     <%= form.submit 'Ready!', data: { action: 'game#ready' } %>
   <% end %>
