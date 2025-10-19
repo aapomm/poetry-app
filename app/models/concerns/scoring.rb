@@ -60,6 +60,15 @@ module Scoring
         # Pass
         else
           self.total_score += sub_turn.score
+
+          if sub_turn.score == 1
+            self.easy_count += 1
+          elsif sub_turn.score == 3
+            self.hard_count += 1
+          else
+            self.easy_count += 1
+            self.hard_count += 1
+          end
         end
       end
 

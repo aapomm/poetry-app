@@ -4,7 +4,9 @@ module Lobby
   included do
     def add_player(id, name)
       self.players ||= []
-      self.players << { id: id, name: name, score: 0 } unless self.players.any? { |player| player[:id] == id }
+      unless self.players.any? { |player| player[:id] == id }
+        self.players << { id: id, name: name, score: 0, easy_count: 0, hard_count: 0 }
+      end
 
       self.host = id if self.players.count == 1
 

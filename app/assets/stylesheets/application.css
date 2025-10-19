@@ -81,10 +81,6 @@ table.turn-score td.scored {
   background-color: #3cec65;
 }
 
-table.scoring-table td {
-  width: 50%;
-}
-
 .flash-error {
   color: #ff8585;
 }

@@ -55,6 +55,11 @@ class Game < ApplicationRecord
     else
       self.glad_score += last_turn.total_score
     end
+
+    last_player[:score] += last_turn.total_score
+    last_player[:easy_count] += last_turn.easy_count
+    last_player[:hard_count] += last_turn.hard_count
+
     self.save
 
     if current_round >= self.rounds

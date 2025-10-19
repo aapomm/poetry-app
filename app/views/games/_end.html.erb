@@ -13,6 +13,8 @@
   <thead>
     <tr>
       <td><strong>Name</strong></td>
+      <td><strong>Easy Words</strong></td>
+      <td><strong>Hard Words</strong></td>
       <td><strong>Score</strong></td>
     </tr>
   </thead>
@@ -20,12 +22,16 @@
     <% game.players.select { |p| p[:team] == :mad }.each do |player| %>
       <tr>
         <td><%= player[:name] %></td>
+        <td><%= player[:easy_count] %></td>
+        <td><%= player[:hard_count] %></td>
         <td><%= player[:score] %></td>
       </tr>
     <% end %>
     <tr>
       <td><strong>Total</strong></td>
-      <td><%= game.mad_score%></td>
+      <td><strong><%= game.players.sum { |p| p[:team] == :mad ? p[:easy_count] : 0 } %></strong></td>
+      <td><strong><%= game.players.sum { |p| p[:team] == :mad ? p[:hard_count] : 0 } %></strong></td>
+      <td><strong><%= game.mad_score%></strong></td>
     </tr>
   </tbody>
 </table>
@@ -36,6 +42,8 @@
   <thead>
     <tr>
       <td><strong>Name</strong></td>
+      <td><strong>Easy Words</strong></td>
+      <td><strong>Hard Words</strong></td>
       <td><strong>Score</strong></td>
     </tr>
   </thead>
@@ -43,12 +51,16 @@
     <% game.players.select { |p| p[:team] == :glad }.each do |player| %>
       <tr>
         <td><%= player[:name] %></td>
+        <td><%= player[:easy_count] %></td>
+        <td><%= player[:hard_count] %></td>
         <td><%= player[:score] %></td>
       </tr>
     <% end %>
     <tr>
       <td><strong>Total</strong></td>
-      <td><%= game.glad_score%></td>
+      <td><strong><%= game.players.sum { |p| p[:team] == :glad ? p[:easy_count] : 0 } %></strong></td>
+      <td><strong><%= game.players.sum { |p| p[:team] == :glad ? p[:hard_count] : 0 } %></strong></td>
+      <td><strong><%= game.glad_score%></strong></td>
     </tr>
   </tbody>
 </table>

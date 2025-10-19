@@ -8,6 +8,9 @@ class CreateTurns < ActiveRecord::Migration[8.0]
       t.integer :total_score, default: 0
       t.integer :round, default: 1
 
+      t.integer :easy_count, default: 0
+      t.integer :hard_count, default: 0
+
       t.belongs_to :game
 
       t.datetime :ended_at

@@ -15,7 +15,7 @@ class GamesController < ApplicationController
   def create
     @game = Game.create(host: session[:user_id])
     @game.players = []
-    @game.players << { id: session[:user_id], name: session[:user_name], score: 0 }
+    @game.players << { id: session[:user_id], name: session[:user_name], score: 0, easy_count: 0, hard_count: 0 }
     @game.save
 
     if @game
