@@ -8,7 +8,14 @@
   data-game-ready-url-value="<%= ready_game_path(code: @game.code) %>"
   data-game-start-url-value="<%= start_game_path(code: @game.code) %>"
 >
+  <%# For rendering lobby/ready views %>
   <%= turbo_stream_from @game %>
+
+  <%# For rendering current/judge views %>
+  <%= turbo_stream_from "game_#{@game.id}_user_#{@user_id}" %>
+
+  <%# For rendering other team views %>
+  <%= turbo_stream_from "game_#{@game.id}_team_#{@game.get_team(@user_id)}" %>
 
   <turbo-frame id="<%= dom_id(@game, :container) %>">
     <%= yield(@game) %>

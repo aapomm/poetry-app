@@ -1,4 +1,9 @@
 <%= render layout: 'layouts/container' do |game| %>
   <% turn = game.current_turn %>
-  <%= render partial: 'games/turn', locals: { game: game, turn: turn } %>
+
+  <% if turn.current_player[:id] == @user_id || turn.current_judge[:id] == @user_id %>
+    <%= render partial: 'games/turn', locals: { game: game, turn: turn } %>
+  <% else %>
+    <%= render partial: 'games/other_turn', locals: { turn: turn, team: game.get_team(@user_id) } %>
+  <% end%>
 <% end %>

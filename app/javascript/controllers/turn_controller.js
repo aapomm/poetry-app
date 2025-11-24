@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = [
     "timer", "words", "word", "skip",
-    "currentView", "otherView",
+    "currentView",
     "playerHeader", "judgeHeader",
     "bonk", "empty"
   ]
@@ -168,9 +168,6 @@ export default class extends Controller {
       this.judgeHeaderTarget.classList.remove('hidden')
 
       this._setWordsUnclickable()
-    }
-    else {
-      this.otherViewTarget.classList.remove('hidden')
     }
 
     this._renderSkip()

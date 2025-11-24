@@ -3,6 +3,8 @@ class Game < ApplicationRecord
 
   has_many :turns
 
+  # Array of players represented as:
+  # [{ id: id, name: name, score: 0, easy_count: 0, hard_count: 0 }, ...]
   serialize :players
 
   enum :state, { waiting: 0, ready: 1, player_turn: 2, finished: 3 }, default: :waiting
@@ -43,7 +45,13 @@ class Game < ApplicationRecord
       round: (current_round + 1).floor
     )
 
-    broadcast_update target: "container_game_#{self.id}", partial: 'games/turn', locals: { game: self, turn: turn }
+    # Broadcast to other players
+    broadcast_update_to "game_#{self.id}_team_mad", target: "container_game_#{self.id}", partial: 'games/other_turn', locals: { turn: turn, team: :mad }
+    broadcast_update_to "game_#{self.id}_team_glad", target: "container_game_#{self.id}", partial: 'games/other_turn', locals: { turn: turn, team: :glad }
+
+    # Broadcast to current player and judge
+    broadcast_update_to "game_#{self.id}_user_#{current_player[:id]}", target: "container_game_#{self.id}", partial: 'games/turn', locals: { game: self, turn: turn }
+    broadcast_update_to "game_#{self.id}_user_#{judge_player[:id]}", target: "container_game_#{self.id}", partial: 'games/turn', locals: { game: self, turn: turn }
   end
 
   def end_turn!
@@ -64,6 +72,8 @@ class Game < ApplicationRecord
 
     if current_round >= self.rounds
       self.finished!
+
+      # TODO: Update to use specific winner loser
       broadcast_update target: "container_game_#{self.id}", partial: 'games/end', locals: { game: self }
     else
       self.ready!
@@ -94,6 +104,10 @@ class Game < ApplicationRecord
 
   def last_player
     self.players.find { |player| player[:id] == self.turns.last.player_id }
+  end
+
+  def get_team(user_id)
+    self.players.find { |player| player[:id] == user_id }[:team]
   end
 
   private

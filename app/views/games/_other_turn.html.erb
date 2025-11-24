@@ -1,0 +1,8 @@
+<div class="<%= team %>_turn">
+  <h1> <%= turn.current_player[:name] %> is playing! </h1>
+  <h4> Judged by: <%= turn.current_judge[:name] %></h4>
+
+  <% if turn.current_player[:team] == team %>
+    <p>As a player for the Team <%= team.capitalize %>, try to guess the words!</p>
+  <% end %>
+</div>
