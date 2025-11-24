@@ -19,7 +19,7 @@
     <% game.players.each_with_index do |player, index| %>
       <tr data-game-target="player" data-player-id="<%= player[:id] %>" class="player-team-<%= player[:team] %>" >
         <td>
-          <%= "#{player[:name]} (Team #{player[:team].capitalize})" %>
+          <%= player[:name] %>
 
           <%= '<--- First player' if index == 0 %>
           <%= '<--- Judge' if index == game.players.count - 1 %>

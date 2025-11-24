@@ -4,16 +4,16 @@
     <div data-join-target="create">
       <%= form_with local: true, url: games_path, class: 'no-margin' do |form| %>
         <div class="actions">
-          <%= form.submit 'Create Game', class: 'button' %>
+          <%= form.submit 'New Game', class: 'button' %>
         </div>
       <% end %>
     </div>
 
-    <input class="hidden" type="text" data-join-target="code" data-action="join#upcase keydown.enter->join#join:prevent" placeholder="Enter Game Code">
+    <input class="hidden" type="text" data-join-target="code" data-action="join#upcase keydown.enter->join#join:prevent" placeholder="Put Game Code">
 
     <div>
       <a href="#" class="button" data-action="join#join:prevent">Join Game</a>
-      <a href="#" class="hidden button" data-join-target="cancel" data-action="join#cancel:prevent">Cancel</a>
+      <a href="#" class="hidden button" data-join-target="cancel" data-action="join#cancel:prevent">Back</a>
     </div>
 
     <div>
@@ -21,7 +21,7 @@
     </div>
 
     <div>
-      <%= link_to 'Logout', users_path, class: 'button logout', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?', 'join-target': 'logout' } %>
+      <%= link_to 'Me want new name', users_path, class: 'button logout', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?', 'join-target': 'logout' } %>
     </div>
   </div>
 </div>

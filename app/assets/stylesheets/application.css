@@ -98,3 +98,14 @@ noscript .alert {
 noscript p {
   margin-top: -2rem;
 }
+
+.title-card {
+  width: 60%;
+}
+
+.game-code {
+  border: 1px solid;
+  background-color: #d2d2d2;
+  font-size: 4rem;
+  margin-bottom: 5%;
+}

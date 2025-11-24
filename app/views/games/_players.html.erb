@@ -1,14 +1,18 @@
-<h1> Game Code: <%= game.code %> </h1>
+<h1>Game Lobby</h1>
+Share this code with your friends:
+<div class="game-code"><strong><%= game.code %></strong></div>
 
-<h2> Players </h2>
-<% if !players || players.empty? %>
-  <p>There are no players in this game yet.</p>
-<% else %>
-  <ol>
-    <% players.each do |player| %>
-      <li data-game-target="player" data-player-id="<%= player[:id] %>">
-        <%= "#{player[:name]}" %> <%= link_to 'X', remove_player_game_path(code: game.code, player_id: player[:id]), class: 'remove-link', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
-      </li>
-    <% end %>
-  </ol>
-<% end %>
+<h5><strong>Players in the lobby:</strong></h5>
+<div>
+  <% if !players || players.empty? %>
+    <p>There are no players in this game yet.</p>
+  <% else %>
+    <ol>
+      <% players.each do |player| %>
+        <li data-game-target="player" data-player-id="<%= player[:id] %>">
+          <%= "#{player[:name]}" %> <%= link_to 'X', remove_player_game_path(code: game.code, player_id: player[:id]), class: 'remove-link', data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
+        </li>
+      <% end %>
+    </ol>
+  <% end %>
+</div>
