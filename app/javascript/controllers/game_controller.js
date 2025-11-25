@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "player", "startButton" ]
+  static targets = [ "player", "startButton", "copyButton" ]
 
   static values = {
     code: String,
@@ -28,6 +28,18 @@ export default class extends Controller {
 
   reconnect() {
     window.location.reload();
+  }
+
+  copy({ params }){
+    const textToCopy = window.location.origin + '/games/' + params.code;
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      const btn = this.copyButtonTarget;
+      btn.style.color = "green";
+      setTimeout(() => btn.style.color = "#555", 500);
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+    });
   }
 
   // Callbacks

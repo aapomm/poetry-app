@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = [
     "timer", "words", "word", "skip",
-    "currentView",
+    "currentView", "timesUpView",
     "bonk", "empty"
   ]
 
@@ -136,6 +136,7 @@ export default class extends Controller {
       }
       else {
         this.currentViewTarget.classList.add('hidden')
+        this.timesUpViewTarget.classList.remove('hidden')
       }
     }
     else {
