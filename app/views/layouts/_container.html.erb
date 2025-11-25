@@ -14,9 +14,6 @@
   <%# For rendering current/judge views %>
   <%= turbo_stream_from "game_#{@game.id}_user_#{@user_id}" %>
 
-  <%# For rendering other team views %>
-  <%= turbo_stream_from "game_#{@game.id}_team_#{@game.get_team(@user_id)}" %>
-
   <turbo-frame id="<%= dom_id(@game, :container) %>">
     <%= yield(@game) %>
   </turbo-frame>

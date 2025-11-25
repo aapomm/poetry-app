@@ -45,13 +45,17 @@ class Game < ApplicationRecord
       round: (current_round + 1).floor
     )
 
-    # Broadcast to other players
-    broadcast_update_to "game_#{self.id}_team_mad", target: "container_game_#{self.id}", partial: 'games/other_turn', locals: { turn: turn, team: :mad }
-    broadcast_update_to "game_#{self.id}_team_glad", target: "container_game_#{self.id}", partial: 'games/other_turn', locals: { turn: turn, team: :glad }
+    self.players.each do |player|
+      stream_target = "game_#{self.id}_user_#{player[:id]}"
 
-    # Broadcast to current player and judge
-    broadcast_update_to "game_#{self.id}_user_#{current_player[:id]}", target: "container_game_#{self.id}", partial: 'games/turn', locals: { game: self, turn: turn, player_type: :current }
-    broadcast_update_to "game_#{self.id}_user_#{judge_player[:id]}", target: "container_game_#{self.id}", partial: 'games/turn', locals: { game: self, turn: turn, player_type: :judge }
+      if player[:id] == current_player[:id]
+        broadcast_update_to stream_target, target: "container_game_#{self.id}", partial: 'games/turn', locals: { game: self, turn: turn, player_type: :current }
+      elsif player[:id] == judge_player[:id]
+        broadcast_update_to stream_target, target: "container_game_#{self.id}", partial: 'games/turn', locals: { game: self, turn: turn, player_type: :judge }
+      else
+        broadcast_update_to stream_target, target: "container_game_#{self.id}", partial: 'games/other_turn', locals: { turn: turn, team: player[:team].to_sym }
+      end
+    end
   end
 
   def end_turn!
@@ -73,7 +77,6 @@ class Game < ApplicationRecord
     if current_round >= self.rounds
       self.finished!
 
-      # TODO: Update to use specific winner loser
       broadcast_update target: "container_game_#{self.id}", partial: 'games/end', locals: { game: self }
     else
       self.ready!
