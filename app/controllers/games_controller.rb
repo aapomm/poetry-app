@@ -124,7 +124,7 @@ class GamesController < ApplicationController
   end
 
   def get_game
-    @game = Game.find_by_code(params[:code])
+    @game = Game.find_by_code(params[:code].upcase)
   end
 
   def invalid_player_count
