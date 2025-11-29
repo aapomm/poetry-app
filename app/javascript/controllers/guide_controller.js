@@ -1,10 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "timer", "word", "pass", "skip" ]
-
+  static targets = [ "timer", "word", "pass", "skip", "easyWord", "hardWord" ]
   static values = {
-    timer: Number
+    timer: Number,
+    index: Number
   }
 
   connect() {
@@ -43,6 +43,28 @@ export default class extends Controller {
       this.passTarget.classList.add('hidden');
       this.skipTarget.classList.remove('hidden');
     }
+  }
+
+  skip() {
+    const testWords = [
+      [ "Lion", "Coco Martin"],
+      [ "Flower", "Toy Story" ],
+      [ "Bowling", "Burpees" ],
+      [ "Wig", "Volcano" ],
+      [ "Fish", "Turbine" ]
+    ]
+
+    let index = this.indexValue % 5;
+    this.indexValue += 1;
+
+    this.easyWordTarget.innerHTML = testWords[index][0];
+    this.hardWordTarget.innerHTML = testWords[index][1];
+
+    this.wordTargets.forEach((word) => {
+      word.setAttribute('data-state', 'unscored');
+      word.classList.add('unscored');
+      word.classList.remove('scored');
+    });
   }
 
   // Callbacks
