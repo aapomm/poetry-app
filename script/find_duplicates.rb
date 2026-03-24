@@ -1,8 +1,9 @@
 require 'yaml'
 
-easy = YAML.load_file('db/easy_words.yml')['easy']
-hard = YAML.load_file('db/hard_words.yml')['hard']
+file = ARGV[0] || abort("Usage: ruby script/find_duplicates.rb <file>")
 
-easy.each do |word|
-  puts word if hard.include?(word)
-end
+data = YAML.load_file(file)
+words = data[data.keys.first]
+
+duplicates = words.select { |word| words.count(word) > 1 }.uniq
+duplicates.each { |word| puts word }

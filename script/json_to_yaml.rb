@@ -1,7 +1,8 @@
 require 'yaml'
 require 'json'
 
-Dir["./sample_files/*"].each do |file|
+files = ARGV.any? ? ARGV : Dir["./sample_files/*"]
+files.each do |file|
   easy = []
   hard = []
 
