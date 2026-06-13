@@ -4,4 +4,6 @@ class GuidesController < ActionController::Base
   def index; end
 
   def sample_turn; end
+
+  def tip; end
 end

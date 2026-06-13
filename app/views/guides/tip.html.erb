@@ -1,0 +1,9 @@
+<div>
+  <h1>Thank you for play!</h1>
+
+  <%= image_tag "qr_tip.jpeg", alt: "QR Code for tipping", class: "tip-qr" %>
+
+  <div style="margin-top: 2rem;">
+    <%= link_to 'Back to Home', new_game_path, data: { turbo: false } %>
+  </div>
+</div>

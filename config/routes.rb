@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   resources :guides, only: :index do
     collection do
       get :sample_turn
+      get :tip
     end
   end
 
